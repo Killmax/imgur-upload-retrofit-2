@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -110,13 +112,13 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<ImageResponse>() {
             @Override
             public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+                GsonBuilder json = new GsonBuilder();
+                Log.w("JSON Response", json.setPrettyPrinting().create().toJson(response));
                 if (response.isSuccessful()) {
                     Toast.makeText(MainActivity.this, "Seems ok.", Toast.LENGTH_SHORT)
                             .show();
                     
                 }
-
-
             }
 
             @Override
