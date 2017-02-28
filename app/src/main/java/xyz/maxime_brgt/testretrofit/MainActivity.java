@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Toast.makeText(MainActivity.this, "Upload successful !", Toast.LENGTH_SHORT)
                             .show();
+                    Log.d("URL Picture", "http://imgur.com/" + response.body().data.id);
                 }
             }
 
