@@ -30,15 +30,14 @@ interface ImgurService {
 
     @Multipart
     @Headers({
-            "Authorization: Client-ID 0b5e46b0ac7b39f",
-            "Content-Type: multipart/form-data"
+            "Authorization: Client-ID 0b5e46b0ac7b39f"
     })
     @POST("image")
     Call<ImageResponse> postImage(
-            @Part("title") RequestBody title,
-            @Part("description") RequestBody description,
-            @Part("album") RequestBody albumId,
-            @Part("account_url") RequestBody username,
+            @Query("title") String title,
+            @Query("description") String description,
+            @Query("album") String albumId,
+            @Query("account_url") String username,
             @Part MultipartBody.Part file);
 
 

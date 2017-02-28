@@ -68,46 +68,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onUpload(View v) {
-        // create RequestBody instance from file
-        RequestBody requestFile =
-                RequestBody.create(
-                        MediaType.parse("image/*"),
-                        chosenFile
-                );
 
-        Log.d("RequestFile", requestFile.toString());
+
+
         // MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("upload", chosenFile.getName(), requestFile);
-
-        Log.d("Body", body.toString());
         ImgurService imgurService = ImgurService.retrofit.create(ImgurService.class);
 
         EditText name = (EditText) findViewById(R.id.name);
         EditText description = (EditText) findViewById(R.id.description);
 
-        RequestBody reqName =
-                RequestBody.create(
-                        MediaType.parse("text/plain"),
-                        name.getText().toString()
-                );
-
-        RequestBody reqDesc =
-                RequestBody.create(
-                        MediaType.parse("text/plain"),
-                        description.getText().toString()
-                );
-
-        RequestBody reqEmpty =
-                RequestBody.create(
-                        MediaType.parse("text/plain"),
-                        ""
-                );
-
         final Call<ImageResponse> call =
                 imgurService.postImage(
-                        reqName,
-                        reqDesc, reqEmpty, reqEmpty, body);
+                        name.getText().toString(),
+                        description.getText().toString(), "", "",
+                        MultipartBody.Part.createFormData(
+                                "image",
+                                chosenFile.getName(),
+                                RequestBody.create(MediaType.parse("image/*"), chosenFile)
+                        ));
 
         call.enqueue(new Callback<ImageResponse>() {
             @Override
@@ -115,9 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 GsonBuilder json = new GsonBuilder();
                 Log.w("JSON Response", json.setPrettyPrinting().create().toJson(response));
                 if (response.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Seems ok.", Toast.LENGTH_SHORT)
+                    Toast.makeText(MainActivity.this, "Upload successful !", Toast.LENGTH_SHORT)
                             .show();
-                    
                 }
             }
 
