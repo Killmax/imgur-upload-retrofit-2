@@ -41,8 +41,6 @@ import static xyz.maxime_brgt.testretrofit.Constants.READ_WRITE_EXTERNAL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> contribs;
-    private ArrayAdapter<String> contribsAdapter;
     private File chosenFile;
     private Uri returnUri;
 
@@ -51,31 +49,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        contribs = new ArrayList<String>();
-        contribsAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, contribs);
     }
 
     public void onChoose(View v) {
 
     Intent intent = new Intent();
-    // Show only images, no videos or anything else
     intent.setType("image/*");
     intent.setAction(Intent.ACTION_GET_CONTENT);
-    // Always show the chooser (if there are multiple options available)
     startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
 
     }
 
     public void onUpload(View v) {
 
+        if (chosenFile == null) {
+            Toast.makeText(MainActivity.this, "Choose a file before upload.", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
 
+        final NotificationHelper notificationHelper = new NotificationHelper(this.getApplicationContext());
+        notificationHelper.createUploadingNotification();
 
         // MultipartBody.Part is used to send also the actual file name
         ImgurService imgurService = ImgurService.retrofit.create(ImgurService.class);
 
         EditText name = (EditText) findViewById(R.id.name);
         EditText description = (EditText) findViewById(R.id.description);
+
 
         final Call<ImageResponse> call =
                 imgurService.postImage(
@@ -90,12 +91,15 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<ImageResponse>() {
             @Override
             public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
-                GsonBuilder json = new GsonBuilder();
-                Log.w("JSON Response", json.setPrettyPrinting().create().toJson(response));
+                if (response == null) {
+                    notificationHelper.createFailedUploadNotification();
+                    return;
+                }
                 if (response.isSuccessful()) {
                     Toast.makeText(MainActivity.this, "Upload successful !", Toast.LENGTH_SHORT)
                             .show();
                     Log.d("URL Picture", "http://imgur.com/" + response.body().data.id);
+                    notificationHelper.createUploadedNotification(response.body());
                 }
             }
 
@@ -103,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<ImageResponse> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "An unknown error has occured.", Toast.LENGTH_SHORT)
                         .show();
+                notificationHelper.createFailedUploadNotification();
                 t.printStackTrace();
             }
         });

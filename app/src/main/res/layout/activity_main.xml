@@ -11,17 +11,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="xyz.maxime_brgt.testretrofit.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=""
-        android:id="@+id/textView"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:textIsSelectable="false" />
-
 
     <ImageView
         android:layout_width="wrap_content"
@@ -30,13 +19,14 @@
         android:id="@+id/imageView"
         android:layout_above="@+id/button"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/description" />
+        android:layout_below="@+id/description"
+        android:background="@android:drawable/ic_menu_report_image" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:inputType="textCapSentences"
+        android:hint="@string/input_title"
         android:ems="10"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
@@ -46,8 +36,8 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Description"
+        android:inputType="textCapSentences"
+        android:hint="@string/input_description"
         android:ems="10"
         android:id="@+id/description"
         android:layout_below="@+id/name"
@@ -57,19 +47,23 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose picture"
+        android:text="@string/btn_picture"
         android:id="@+id/button"
         android:onClick="onChoose"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/background_light" />
 
     <Button
-        android:text="Upload"
+        android:text="@string/btn_upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button2"
         android:onClick="onUpload"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/background_light" />
 
 </RelativeLayout>
