@@ -1,7 +1,6 @@
 package xyz.maxime_brgt.testretrofit;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,13 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
-
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +26,6 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         final NotificationHelper notificationHelper = new NotificationHelper(this.getApplicationContext());
         notificationHelper.createUploadingNotification();
 
-        // MultipartBody.Part is used to send also the actual file name
         ImgurService imgurService = ImgurService.retrofit.create(ImgurService.class);
 
         EditText name = (EditText) findViewById(R.id.name);
@@ -124,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), returnUri);
-                // Log.d(TAG, String.valueOf(bitmap));
 
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageBitmap(bitmap);
@@ -175,21 +167,16 @@ public class MainActivity extends AppCompatActivity {
             case READ_WRITE_EXTERNAL:
             {
                 Map<String, Integer> perms = new HashMap<String, Integer>();
-                // Initial
                 perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-                // Fill with results
                 for (int i = 0; i < permissions.length; i++)
                     perms.put(permissions[i], grantResults[i]);
-                // Check for ACCESS_FINE_LOCATION
                 if (perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                         && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    // All Permissions Granted
                     Toast.makeText(MainActivity.this, "All Permission are granted.", Toast.LENGTH_SHORT)
                             .show();
                     getFilePath();
                 } else {
-                    // Permission Denied
                     Toast.makeText(MainActivity.this, "Some permissions are denied", Toast.LENGTH_SHORT)
                             .show();
                 }
