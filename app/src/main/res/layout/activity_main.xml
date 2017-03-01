@@ -20,7 +20,7 @@
         android:layout_above="@+id/button"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/description"
-        android:background="@android:drawable/ic_menu_report_image" />
+        android:background="?android:attr/alertDialogIcon" />
 
     <EditText
         android:layout_width="wrap_content"
